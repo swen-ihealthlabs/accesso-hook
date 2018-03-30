@@ -1,0 +1,33 @@
+# OSX
+#
+.DS_Store
+
+# JavaScript generated documentation
+#
+docs/jsdoc
+
+# node.js
+#
+dist/*
+*temp/
+# src/config/production-settings.json #Uncomment this when going live
+node_modules
+npm-debug.log
+.idea
+docker-compose.yml
+docker-compose-release.yml
+*plugin.xml
+*.rdb
+.env
+env.pop.dev.eu.local
+# coverage generated files
+coverage/
+
+# logs
+logs/*.log
+*.log
+# vscode
+.vscode
+
+# vagrant
+.vagrant
