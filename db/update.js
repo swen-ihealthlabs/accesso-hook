@@ -2,15 +2,15 @@
  * update each id's status to "saved" on target db
  * this setup takes place after id records' export to file
  * @param {Collection} resolvedCollection target collection
- * @param {Document} doc objectId to update on target
+ * @param {number} mesureId objectId to update on target
  * @return {object} saved object, status: saved
  */
-const doUpdate = async (resolvedCollection, doc) => {
+const doUpdate = async (resolvedCollection, mesureId) => {
   // const collection = await targetCollectionPromise();
-  console.log(`${JSON.stringify(doc, null, 2)}`);
+  console.log(`1 doUpdate(): ${JSON.stringify(mesureId, null, 2)}`);
   const filter = {
-    _id: {
-      $eq: doc
+    mid: {
+      $eq: mesureId
     }
   };
   const update = {

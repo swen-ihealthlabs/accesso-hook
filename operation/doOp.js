@@ -15,7 +15,7 @@ const { doUpdate } = require('../db/update');
  * @returns {void}
  */
 // 这是一个队列，改写成Promise队列
-const doExport = async (targetCollection, objectIds, preSync = true) => {
+const doExport = async (objectIds, targetCollection, preSync = true) => {
   try {
     for (let objectId of objectIds) {
       if (preSync) {
@@ -81,12 +81,9 @@ const doSync = async (rSourceCollection, rTargetCollection) => {
       sourceLatest,
       targetLatest
     );
-    // for (let objectid of unsavedIds) {
-    //   console.log(`doSync(): type of objectid is ${typeof objectid}`);
-    // }
     console.log(`doSync(): unsaved Ids are ${unsavedIds}`);
-    const insertedIds = await doExport(rTargetCollection, unsavedIds, false);
-    // console.log(`doSync(): Ids saved in target collection are ${insertedIds}`);
+    return unsavedIds;
+    // const insertedIds = await doExport(rTargetCollection, unsavedIds, false);
   } catch (error) {
     console.log(error);
   }

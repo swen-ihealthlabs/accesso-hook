@@ -1,6 +1,6 @@
 global.Promise = require('bluebird');
 const {
-  doSync, doExport, doListenInsert
+  doSync, doExport
 } = require('./doOp');
 
 const syncOp = async (rSourceCollection, rTargetCollection) => {
@@ -8,7 +8,11 @@ const syncOp = async (rSourceCollection, rTargetCollection) => {
     resolve(doSync(rSourceCollection, rTargetCollection));
   }).then((unsavedObjectIds) => {
     return new Promise((resolve) => {
-      resolve(doExport(rTargetCollection, unsavedObjectIds));
+      resolve(doExport(unsavedObjectIds, rTargetCollection));
     });
   });
+};
+
+module.exports = {
+  syncOp
 };
