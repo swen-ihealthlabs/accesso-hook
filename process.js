@@ -8,6 +8,7 @@ const run = async () => {
   const rSourceCollection = await sourceCollection();
   const rTargetCollection = await targetCollection();
   syncOp(rSourceCollection, rTargetCollection);
+  // queue([doSync, doExport], rSourceCollection, rTargetCollection);
 };
 
 run();
