@@ -3,6 +3,7 @@ const {
 } = require('../db/find');
 const { doSave } = require('../db/save');
 const { doUpdate } = require('../db/update');
+
 /**
  * export inserted data to file
  * 1. check if data id exsited on target db
@@ -89,10 +90,26 @@ const doSync = async (rSourceCollection, rTargetCollection) => {
   }
 };
 
-const doListenInsert = async () => {};
+const doListen = async () => {
+  // let _docs;
+  // const oplog = MongoOplog('mongodb://localhost:27017/local', {
+  //   ns: 'test.taccounts'
+  // });
+  // oplog.tail();
+  // const docs = await oplog.on('insert');
+  // return docs;
+  // oplog.on('insert', (docs) => {
+  //   _docs = docs;
+  // });
+  // console.log`doListen(): ${_docs}`);
+  // return _docs;
+  // stream.on('insert', (doc) => {
+  //   console.log(doc);
+  // });
+};
 
 module.exports = {
   doSync,
   doExport,
-  doListenInsert
+  doListen
 };

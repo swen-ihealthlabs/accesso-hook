@@ -1,68 +1,86 @@
-const MongoDB = require('./connect');
-const ObjectId = require('mongodb').ObjectId;
+const {
+  MongoClient, ObjectId
+} = require('mongodb');
+const MongoOplog = require('mongo-oplog');
 global.Promise = require('bluebird');
 require('dotenv').config();
+const { doExport } = require('./operation/doOp');
+const { insertOp } = require('./operation/insertOp');
+const { targetCollection } = require('./db/collection.js');
 
-// const namespace = {
-//   ns: 'test.accounts'
-// };
-
+const uri = 'mongodb://localhost:27017/local';
+const dbUrl = 'mongodb://localhost:27017';
+const dbName = 'test';
 const collName = 'accounts';
-const findLatestOne = async (collect) => {
-  if (collect) {
-    try {
-      const latest = await collect
-        .find({
-        })
-        .sort({
-          _id: -1
-        })
-        .limit(1)
-        .toArray()[0];
-      console.log(latest);
-      return latest;
-    } catch (err) {
-      console.error(err);
-    }
-  } else {
-    console.error('collection is not valid');
-  }
+const namespace = {
+  ns: 'test.accounts'
 };
+// const oplog = MongoOplog(uri, namespace);
+// oplog.tail().then(() => {
+//   console.log(`Now listen to changes on ${uri}, collection ${namespace.ns}`);
+// });
 
-MongoDB.connect(async (err) => {
-  if (err) {
-    throw err;
-  }
-  const db = MongoDB.getDB();
-  const collection = db.collection(collName);
-  const lastest = await findLatestOne(collection);
-});
-
-// async function connect(url) {
-//   if (!client) {
-//     try {
-//       client = await MongoClient.connect(url);
-//       console.log(`Connect to ${url}`);
-//       return client;
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   }
-//   return client;
-// }
-
-// const collection = (async (url, dbName, collectionName) => {
-//   if (!client) {
-//     try {
-//       client = await MongoClient.connect(url);
-//       const db = client.db(dbName);
-//       const collect = await db.collection(collectionName);
-//       console.log('collected');
-//       return collect;
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   }
-// })(mongourl, name, collName);
-
-// findLatestOne();
+new Promise((resolve, reject) => {
+  MongoClient.connect(dbUrl, (err, client) => {
+    if (err) {
+      reject(err);
+    }
+    console.log(`Connect to ${dbUrl}`);
+    resolve(client);
+  });
+})
+  .then((client) => {
+    return new Promise((resolve) => {
+      const db = client.db(dbName);
+      if (db) {
+        console.log(`Use ${db.toString()}`);
+      }
+      const collecti = db.collection(collName);
+      console.log(`collection ${collecti}`);
+      resolve(collecti);
+    });
+  })
+  .then((collecti) => {
+    return new Promise((resolve) => {
+      const documents = collecti.insertMany([
+        {
+          name: 'David',
+          age: 12
+        },
+        {
+          name: 'Elsa',
+          age: 13
+        },
+        {
+          name: 'Farine',
+          age: 14
+        }
+      ]);
+      resolve(documents);
+    });
+  })
+  .then((documents) => {
+    console.log(documents);
+  });
+// .then(() => {
+//   return new Promise((resolve) => {
+//     let docsIds = [];
+//     oplog.on('insert', (result) => {
+//       const insertedObject = result.o;
+//       docsIds.push(ObjectId(insertedObject._id));
+//     });
+//     resolve(docsIds);
+//   });
+// })
+// .then((unsavedObjectIds) => {
+//   console.log(`unsavedObjectIds:${unsavedObjectIds}`);
+//   return new Promise((resolve) => {
+//     resolve(targetCollection);
+//   });
+// })
+// .then((rTargetCollection) => {
+//   console.log(rTargetCollection)
+//   return new Promise((resolve) => {
+//     insertOp()
+//   })
+// });
