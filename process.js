@@ -3,12 +3,22 @@ const {
   sourceCollection, targetCollection
 } = require('./db/collection');
 const { syncOp } = require('./operation/syncOp');
+const { listen } = require('./operation/insertOp');
+const MongoOplog = require('mongo-oplog');
 
-const run = async () => {
+const uri = 'mongodb://localhost:27017/local';
+const namespace = {
+  ns: 'test.accounts'
+};
+
+const run = async (oplog) => {
   const rSourceCollection = await sourceCollection();
   const rTargetCollection = await targetCollection();
-  syncOp(rSourceCollection, rTargetCollection);
+
+  listen(oplog, rTargetCollection);
+  // syncOp(rSourceCollection, rTargetCollection);
   // queue([doSync, doExport], rSourceCollection, rTargetCollection);
 };
 
-run();
+const oplog = MongoOplog(uri, namespace);
+run(oplog);

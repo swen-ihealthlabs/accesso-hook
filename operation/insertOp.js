@@ -23,6 +23,27 @@ const insertOp = async (rTargetCollection) => {
   });
 };
 
+const listen = async (oplog, rTargetCollection) => {
+  let docsIds = [];
+  return new Promise((resolve) => {
+    oplog.tail().then(() => {
+      console.log('listen(): now listening to inert event on mongodb');
+    });
+    oplog.on('insert', (result) => {
+      resolve(result);
+    });
+  }).then((result) => {
+    console.log(`listen(): ${JSON.stringify(result, null, 2)}`);
+    const insertedObject = result.o;
+    docsIds.push(ObjectId(insertedObject._id));
+    console.log(`listen(): docsIds: ${docsIds}`);
+    return new Promise((resolve) => {
+      resolve(doExport(docsIds, rTargetCollection));
+    });
+  });
+};
+
 module.exports = {
-  insertOp
+  insertOp,
+  listen
 };

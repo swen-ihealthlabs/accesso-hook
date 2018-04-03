@@ -60,13 +60,13 @@ new Promise((resolve, reject) => {
     console.log(documents);
   });
 
-const oplog = MongoOplog(uri, namespace);
-console.log(oplog);
+// const oplog = MongoOplog(uri, namespace);
+// console.log(oplog);
 
-oplog.tail().then(() => {
-  console.log(`Now listen to changes on ${uri}, collection ${namespace.ns}`);
-});
+// oplog.tail().then(() => {
+//   console.log(`Now listen to changes on ${uri}, collection ${namespace.ns}`);
+// });
 
-oplog.on('insert', (doc) => {
-  console.log(doc.o);
-});
+// oplog.on('insert', (doc) => {
+//   console.log(doc.o);
+// });
